@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <f:view>
+
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+            </f:facet>
+            <title>#{applicationBean.appTitle}</title>
+
+            <h:outputScript name="js/ripple-effect.js" library="modena-layout" />
+            <h:outputScript name="js/perfect-scrollbar.js" library="modena-layout" />
+            <h:outputScript name="js/layout.js" library="modena-layout" />
+            <h:outputScript name="imagesloaded.pkgd.min.js" library="js" />
+            <h:outputScript name="masonry.pkgd.min.js" library="js" />
+            <h:outputScript name="masonry-helper.js" library="js" />
+
+            <ui:insert name="head" />
+
+        </h:head>
+
+        <h:body class="RedModena Geometry">
+<ui:remove>
+            <p:dialog id="loginDialog" style="min-width: 400px;" modal="true" closable="true" showHeader="false" closeOnEscape="true" resizable="false" widgetVar="loginDialog">
+                <p:ajax event="close" update="@all" />
+                <div class="Wid100 MarAuto WidAutoOnMobile">
+                    <div class="Card ShadowEffect">
+                        <h:form id="loginForm">
+                            <p:messages />
+                            <div class="Wid100 OvHidden BigTopic Fs18 TexAlCenter"><i class="icon-security Fs30 DispBlock"/> Login </div>
+                            <div class="EmptyBox30"></div>
+                            <div class="Wid100 TexAlCenter">
+                                <p:inputText id="username" value="#{userToLogin.username}" placeholder="Username" styleClass="Wid80 TexAlCenter Fs14">
+                                    <p:ajax event="keyup" listener="#{loginController.removeMessage}" update="msgUsername" process="username" partialSubmit="true" />
+                                </p:inputText>
+                            </div>
+                            <div class="Wid100 TexAlCenter"><p:message id="msgUsername" for="username" showSummary="true" showDetail="false"  styleClass="Wid80 TexAlCenter Fs14"/></div>
+                            <div class="EmptyBox10"></div>
+                            <div class="Wid100 TexAlCenter">
+                                <p:inputText id="password" value="#{userToLogin.password}" type="password" placeholder="Password" styleClass="Wid80 TexAlCenter Fs14">
+                                    <p:ajax event="keyup" listener="#{loginController.removeMessage}" update="msgPassword" />
+                                </p:inputText>
+                            </div>
+                            <div class="Wid100 TexAlCenter"><p:message id="msgPassword" for="password" showSummary="true" showDetail="false"  styleClass="Wid80 TexAlCenter Fs14"/></div>
+                            <div class="EmptyBox30"></div>
+                            <div class="Wid100 TexAlCenter">
+                                <p:commandButton id="loginCmd" actionListener="#{loginController.login(null)}" process="@form"
+                                                 update="msgUsername msgPassword msgLogin" appendTo="@(body)"
+                                                 value="Sign In " icon="fa fa-sign-in" styleClass=" Fs14 White RaisedButton" />
+                            </div>
+                            <div class="Wid100 TexAlCenter"><p:messages id="msgLogin" for="loginCmd" showSummary="true" showDetail="false"  styleClass="Wid80 TexAlCenter Fs14"/></div>
+                            <div class="EmptyBox10"></div>
+                            <div class="Wid100 TexAlCenter"><p:link value="Forgot Password ?" styleClass="Fs10 White"/></div>
+                        </h:form>
+                    </div>
+                </div>
+            </p:dialog>
+</ui:remove>
+
+            <ui:include src="topbar.xhtml" />
+
+            <div id="wrapper">
+                <div id="wrapperIndent">
+
+                    <ui:include src="layoutmenu.xhtml" />
+
+                    <div id="layout-portlets-cover">
+                        <div class="Container96 Fnone MarAuto">
+
+                            <!-- SUB TOPBAR START -->
+                            <div class="Container100 UserLinks">
+                                <div class="ContainerIndent TexAlCenter">
+                                    <span class="Fleft">
+                                        <ui:insert name="subheader" />
+                                    </span>
+                                    <ui:insert name="subheader_title" />
+                                    <span class="Fright">
+                                        <p:link outcome="/sec/user/profile" rendered="#{userSession.loggedIn}">
+                                            <p:outputLabel value="#{text['user.welcome']} " />
+                                            <p:outputLabel value="#{userSession.user.username}" />
+                                            <i class="icon-account_circle Fright Fs24" style="padding-left: 5px;" />
+                                        </p:link>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- SUB TOPBAR END -->
+                            <ui:insert name="content">
+                                Template
+                            </ui:insert>
+
+                            <!-- footer -->
+                            <div id="layout-footer">
+                                <div class="Container100 op100">
+                                    <div class="TexAlCenter Fs14 BoldGray op100">
+                                        <div class="Card ShadowEffect" style="padding: 2px !important;">
+                                            <p:link outcome="/impressum" value="Impressum" style="float: left;" />
+                                            LittleBigBody | All Rights Reserved.
+                                            <span style="display: inline-block; vertical-align:bottom; float: right;">
+                                                <p:outputLabel value="#{configurationController.applicationVersion}" styleClass="Fs9 BoldGray"  />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+                        <f:facet name="start">
+                            <p:graphicImage name="images/preloader.gif" library="modena-layout"/>
+                        </f:facet>
+
+                        <f:facet name="complete">
+                            <h:outputText value="" />
+                        </f:facet>
+                    </p:ajaxStatus>
+                </div>
+            </div>
+
+            <h:outputStylesheet name="css/core-layout.css" library="modena-layout" />
+            <h:outputStylesheet name="css/animate.css" library="modena-layout" />
+            <h:outputStylesheet name="css/modena-font.css" library="modena-layout" />
+            <h:outputStylesheet name="css/ripple-effect.css" library="modena-layout" />
+            <h:outputStylesheet name="css/perfect-scrollbar.css" library="modena-layout" />
+            <h:outputStylesheet name="css/font-awesome.css" library="modena-layout" />
+            <h:outputStylesheet name="css/modena-layout.css" library="modena-layout" />
+            <h:outputStylesheet name="custom.css" library="css" />
+
+        </h:body>
+    </f:view>
+
+</html>

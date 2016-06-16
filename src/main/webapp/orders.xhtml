@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <f:view>
+        <h1>
+            <h:outputText value="Orders"/>
+            <h:panelGroup id="userLabel" style="display: inline" rendered="#{not (currentSelectedUser eq null)}">
+                <h:outputText value=" (#{currentSelectedUser.getFullName()})" />
+            </h:panelGroup>
+        </h1>
+
+        <h:panelGroup layout="block" style="margin-top: 20px;">
+            <h:dataTable value="#{allOrdersOfCurrentUser}" var="order" style="border: 1px solid;">
+                <h:column>
+                    <f:facet name="header">
+                        Order date
+                    </f:facet>
+                    <h:outputText value="#{order.orderDate}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Total amount
+                    </f:facet>
+                    <h:outputText value="#{order.totalAmount}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Ordered products
+                    </f:facet>
+                    <h:panelGroup>
+                        <ul>
+                            <ui:repeat value="#{order.orderedProducts}" var="product">
+                            <li>
+                                <h:outputText value="#{product.getSummary()}" />
+                            </li>
+                            </ui:repeat>
+                        </ul>
+                    </h:panelGroup>
+                </h:column>
+            </h:dataTable>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" style="margin-top: 20px;">
+            <h:form>
+                <h:dataTable value="#{allAvailableProducts}" var="product" style="border: 1px solid;">
+                    <h:column>
+                        <f:facet name="header">
+                            Product No.
+                        </f:facet>
+                        <h:outputText value="#{product.productNo}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            Description
+                        </f:facet>
+                        <h:outputText value="#{product.description}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            Price
+                        </f:facet>
+                        <h:outputText value="#{product.price}" >
+                            <f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="en-US" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <h:selectBooleanCheckbox value="#{product.selected}" />
+                    </h:column>
+                </h:dataTable>
+                <h:commandButton value="Submit order" action="#{orderController.placeOrder}">
+                    <f:ajax render="@all" execute="@form" />
+                </h:commandButton>
+            </h:form>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" style="margin-top: 20px;">
+            <h:link value="Back to users" outcome="users" />
+        </h:panelGroup>
+    </f:view>
+</html>

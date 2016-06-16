@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <f:view>
+        <h1>
+            <h:outputText value="Users"/>
+            <h:panelGroup id="userLabel" style="display: inline" rendered="#{not (currentSelectedUser eq null)}">
+                <h:outputText value=" (#{currentSelectedUser.getFullName()})" />
+            </h:panelGroup>
+        </h1>
+        <h:panelGrid columns="2">
+            <h:form>
+                <h:inputText value="#{userController.searchString}" />
+                <h:commandButton value="Search" actionListener="#{userController.searchUsers(userController.searchString)}">
+                    <f:ajax execute="@form" render="userListForm" />
+                </h:commandButton>
+            </h:form>
+        </h:panelGrid>
+
+        <h:form id="userListForm">
+            <h:dataTable id="usersTable" value="#{userController.usersToShow}" var="user" style="border: 1px solid;">
+                <h:column>
+                    <f:facet name="header">
+                        Select for orders
+                    </f:facet>
+                    <h:commandButton value="select" actionListener="#{userController.setCurrentSelectedUser(user)}">
+                        <f:ajax execute="@this" render="userLabel" />
+                    </h:commandButton>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Lastname
+                    </f:facet>
+                    <h:outputText value="#{user.lastname}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Firstname
+                    </f:facet>
+                    <h:outputText value="#{user.firstname}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        eMail
+                    </f:facet>
+                    <h:outputText value="#{user.email}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Birthdate
+                    </f:facet>
+                    <h:outputText value="#{user.birthdate}">
+                        <f:convertDateTime dateStyle="short" locale="en-US" />
+                    </h:outputText>
+                </h:column>
+                <h:column>
+                    <h:commandButton value="Delete" actionListener="#{userController.removeUser(user)}" >
+                        <f:ajax execute="@this" render="usersTable" />
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+
+        <h:panelGrid>
+            <h:form>
+                <h:commandButton value="New User" actionListener="#{userController.prepareNewUser()}">
+                    <f:ajax execute="@this" render="newUserGrid" />
+                </h:commandButton>
+            </h:form>
+        </h:panelGrid>
+        <h:panelGroup id="newUserGrid" rendered="#{not (userToAdd eq null)}">
+            <h:form id="newUserForm">
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Firstname" />
+                    <h:inputText value="#{userToAdd.firstname}" />
+                    <h:outputLabel value="Lastname" />
+                    <h:inputText value="#{userToAdd.lastname}" />
+                    <h:outputLabel value="eMail" />
+                    <h:inputText value="#{userToAdd.email}" />
+                    <h:outputLabel value="Birthdate" />
+                    <h:inputText value="#{userToAdd.birthdate}">
+                        <f:convertDateTime type="date" pattern="MM.dd.yyyy" locale="en-US"/>
+                    </h:inputText>
+                    <h:outputLabel value="Street" />
+                    <h:inputText value="#{userToAdd.address.street}" />
+                    <h:outputLabel value="Street No." />
+                    <h:inputText value="#{userToAdd.address.streetNo}" />
+                    <h:outputLabel value="Zipcode" />
+                    <h:inputText value="#{userToAdd.address.zipCode}" />
+                    <h:outputLabel value="City" />
+                    <h:inputText value="#{userToAdd.address.city}" />
+                    <h:outputLabel value="" />
+                    <h:commandButton value="Add" action="#{userController.addNewUser}" />
+                </h:panelGrid>
+            </h:form>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" style="margin-top: 20px;" rendered="#{not (currentSelectedUser eq null)}" >
+            <h:link outcome="orders" value="Goto orders" />
+        </h:panelGroup>
+    </f:view>
+
+</html>
