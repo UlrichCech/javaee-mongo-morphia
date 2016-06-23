@@ -3,24 +3,14 @@ package de.sofiworx.examples.jmm.business.user.entity;
 import de.sofiworx.examples.jmm.platform.persistence.PersistentEntity;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Field;
-import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.IndexOptions;
-import org.mongodb.morphia.annotations.Indexes;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
-
-import static org.mongodb.morphia.utils.IndexType.ASC;
 
 /**
  * @author Ulrich Cech
  */
 @Entity(value = "users", noClassnameStored = true)
-@Indexes({
-        @Index(fields = @Field(value="firstname", type = ASC), options = @IndexOptions(unique = true))
-})
 public class User extends PersistentEntity {
 
     private static final long serialVersionUID = -1790104482978817721L;

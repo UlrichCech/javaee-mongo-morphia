@@ -5,8 +5,8 @@ import com.mongodb.client.MongoCollection;
 import de.sofiworx.examples.jmm.business.user.entity.User;
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.mongodb.morphia.Datastore;
 
 import java.util.GregorianCalendar;
 
@@ -23,7 +23,6 @@ public class DBConnectionTest {
     public void establishDBConnection() {
         DBConnection dbConnection = new DBConnection();
         dbConnection.init();
-        dbConnection.checkConnection();
         dbConnection.closeConnection();
     }
 
@@ -48,6 +47,7 @@ public class DBConnectionTest {
         } finally {
             testdataCollection.deleteMany(new BsonDocument());
         }
+        dbConnection.closeConnection();
     }
 
 
@@ -69,26 +69,9 @@ public class DBConnectionTest {
             assertThat(retrievedUser.getLastname(), is("Mustermann"));
             assertThat(testUser.getId(), is(retrievedUser.getId()));
         } finally {
-//            dbConnection.getDatastore().delete(testUser);
+            dbConnection.getDatastore().delete(testUser);
         }
+        dbConnection.closeConnection();
     }
-
-    @Test
-    public void showUsageOfIndexes() {
-        DBConnection dbConnection = new DBConnection();
-        dbConnection.init();
-        final Datastore datastore = dbConnection.getDatastore();
-        for (int i = 0; i < 1000000; i++) {
-            User user = new User();
-            user.setFirstname("Firstname" + i);
-            user.setLastname("Lastname" + i);
-            datastore.save(user);
-        }
-        long start = System.currentTimeMillis();
-        final User user = datastore.find(User.class).filter("firstname", "Firstname900000").get();
-        System.out.println("User found in " + (System.currentTimeMillis() - start) + "ms");
-        assertThat(user, notNullValue());
-    }
-
 
 }

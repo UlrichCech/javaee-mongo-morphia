@@ -12,6 +12,11 @@ import javax.enterprise.inject.Produces;
 import java.io.Serializable;
 
 /**
+ * ${CARET}//TODO add class description here
+ *
+ * https://docs.mongodb.org/manual/tutorial/enable-authentication/
+ * https://docs.mongodb.org/manual/tutorial/manage-users-and-roles/
+ *
  * @author Ulrich Cech
  */
 @Singleton
@@ -26,11 +31,10 @@ public class DBConnection implements Serializable {
     public DBConnection() {
     }
 
-
     @PostConstruct
     public void init() {
         if ((mongo == null) && (datastore == null)) {
-            mongo = new MongoClient("localhost", 27017);
+            mongo = new MongoClient("localhost:27017");
             Morphia morphia = new Morphia();
             datastore = morphia.createDatastore(mongo, "jmm");
             morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
@@ -47,15 +51,12 @@ public class DBConnection implements Serializable {
         return mongo;
     }
 
-    public void checkConnection() {
-        System.out.println(mongo.getConnectPoint());
-    }
-
     public void closeConnection() {
         if (mongo != null) {
             mongo.close();
             mongo = null;
         }
+        datastore = null;
     }
 
 }
